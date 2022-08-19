@@ -18,3 +18,4 @@ def test_infrastructure() -> None:
     template = assertions.Template.from_stack(stack)
 
     template.resource_count_is("AWS::DynamoDB::Table", 3)
+    template.resource_count_is("Custom::AWS", 3)

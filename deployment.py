@@ -6,7 +6,11 @@ from aws_cdk import (
 )
 from constructs import Construct
 
-from database.infrastructure import Database
+import constants
+from database.infrastructure import (
+    Database,
+    LoadTableResource
+)
 
 
 class FantasyFootballScraper(cdk.Stage):
@@ -26,3 +30,6 @@ class FantasyFootballScraper(cdk.Stage):
             serverless, "Database",
             dynamodb_billing_mode=database_dynamodb_billing_mode
         )
+        LoadTableResource(serverless, "LoadSeasonTable", database.season_table, constants.SEASON_PUT_REQUESTS)
+        LoadTableResource(serverless, "LoadStatisticTable", database.statistic_table, constants.STATISTIC_PUT_REQUESTS)
+        LoadTableResource(serverless, "LoadTeamTable", database.team_table, constants.TEAM_PUT_REQUESTS)
