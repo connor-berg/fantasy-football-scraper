@@ -6,10 +6,19 @@ import aws_cdk as cdk
 CDK_APP_NAME = "FantasyFootballScraper"
 CDK_APP_PYTHON_VERSION = "3.9"
 
+GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:us-east-2:440732186198:connection/a8ef58bf-0987-4611-8a8c-619e207c6e85"
+GITHUB_OWNER = "connor-berg"
+GITHUB_REPO = "fantasy-football-scraper"
+GITHUB_TRUNK_BRANCH = "main"
+
 DEV_ENV = cdk.Environment(
     account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]
 )
 DEV_DATABASE_DYNAMODB_BILLING_MODE = dynamodb.BillingMode.PAY_PER_REQUEST
+
+PIPELINE_ENV = cdk.Environment(account="440732186198", region="us-east-2")
+PROD_ENV = cdk.Environment(account="440732186198", region="us-east-2")
+PROD_DATABASE_DYNAMODB_BILLING_MODE = dynamodb.BillingMode.PROVISIONED
 
 TEAM_PUT_REQUESTS = \
     [
