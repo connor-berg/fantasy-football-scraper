@@ -1,12 +1,18 @@
-#!/usr/bin/env python3
-import os
-
 import aws_cdk as cdk
 
-from fantasy_football_scraper.fantasy_football_scraper_stack import FantasyFootballScraperStack
-
+import constants
+from deployment import FantasyFootballScraper
 
 app = cdk.App()
-FantasyFootballScraperStack(app, "FantasyFootballScraperStack")
+
+# Development
+FantasyFootballScraper(
+    app,
+    f"{constants.CDK_APP_NAME}-Dev",
+    env=constants.DEV_ENV,
+    database_dynamodb_billing_mode=constants.DEV_DATABASE_DYNAMODB_BILLING_MODE,
+)
+
+# TODO: define production pipeline
 
 app.synth()
