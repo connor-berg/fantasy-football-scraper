@@ -2,13 +2,20 @@ import json
 import pathlib
 
 import aws_cdk as cdk
-from aws_cdk import (
-    aws_codebuild as codebuild,
-    pipelines
-)
+from aws_cdk import aws_codebuild as codebuild
+from aws_cdk import pipelines
 from constructs import Construct
 
-import constants
+from constants import (
+    CDK_APP_NAME,
+    CDK_APP_PYTHON_VERSION,
+    GITHUB_CONNECTION_ARN,
+    GITHUB_OWNER,
+    GITHUB_REPO,
+    GITHUB_TRUNK_BRANCH,
+    PROD_DATABASE_DYNAMODB_BILLING_MODE,
+    PROD_ENV,
+)
 from deployment import FantasyFootballScraper
 
 
@@ -18,22 +25,20 @@ class Pipeline(cdk.Stack):
 
         build_spec = {
             "phases": {
-                "install": {
-                    "runtime-versions": {"python": constants.CDK_APP_PYTHON_VERSION}
-                }
+                "install": {"runtime-versions": {"python": CDK_APP_PYTHON_VERSION}}
             }
         }
         pipeline_source = pipelines.CodePipelineSource.connection(
-            f"{constants.GITHUB_OWNER}/{constants.GITHUB_REPO}",
-            constants.GITHUB_TRUNK_BRANCH,
-            connection_arn=constants.GITHUB_CONNECTION_ARN,
+            f"{GITHUB_OWNER}/{GITHUB_REPO}",
+            GITHUB_TRUNK_BRANCH,
+            connection_arn=GITHUB_CONNECTION_ARN,
         )
         synth_codebuild_step = pipelines.CodeBuildStep(
             "Synth",
             input=pipeline_source,
             partial_build_spec=codebuild.BuildSpec.from_object(build_spec),
             install_commands=["./scripts/install-deps.sh"],
-            commands=["./scripts/run-tests.sh", "npx aws-cdk@2.x synth"],
+            commands=["pytest", "npx aws-cdk@2.x synth"],
             primary_output_directory="cdk.out",
         )
         pipeline = pipelines.CodePipeline(
@@ -59,8 +64,8 @@ class Pipeline(cdk.Stack):
     def _add_prod_stage(self, codepipeline: pipelines.CodePipeline) -> None:
         prod_stage = FantasyFootballScraper(
             self,
-            f"{constants.CDK_APP_NAME}-Prod",
-            env=constants.PROD_ENV,
-            database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
+            f"{CDK_APP_NAME}-Prod",
+            env=PROD_ENV,
+            database_dynamodb_billing_mode=PROD_DATABASE_DYNAMODB_BILLING_MODE,
         )
         codepipeline.add_stage(prod_stage)
