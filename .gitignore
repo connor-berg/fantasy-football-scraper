@@ -14,3 +14,9 @@ cdk.out
 
 # PyCharm
 .idea
+
+# Unit test / coverage reports
+.coverage
+
+# Node
+node_modules
