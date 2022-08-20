@@ -1,9 +1,5 @@
-from aws_cdk import (
-    assertions,
-    aws_dynamodb as dynamodb,
-    App,
-    Stack
-)
+from aws_cdk import App, Stack, assertions
+from aws_cdk import aws_dynamodb as dynamodb
 
 from database.infrastructure import Database
 
@@ -11,7 +7,7 @@ from database.infrastructure import Database
 def test_infrastructure() -> None:
     app = App()
     stack = Stack(app, "Stack")
-    database = Database(
+    Database(
         stack, "Database", dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST
     )
 

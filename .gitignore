@@ -5,9 +5,6 @@ __pycache__
 .venv
 *.egg-info
 
-# Poetry
-requirements*.txt
-
 # CDK asset staging directory
 .cdk.staging
 cdk.out

@@ -1,6 +1,8 @@
 
 # Fantasy Football Scraper
 
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
+
 This is a serverless AWS application to scrape NFL statistics. It's built using
 AWS CDK v2 and Python 3.9.
 
