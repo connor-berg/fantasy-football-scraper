@@ -777,7 +777,7 @@ requests = ">=2.0,<3.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "dfaa73f72ce0add94fa28d42e9f908dead7cfe514a3cc2cda188f298c284f7f9"
+content-hash = "c4f277667d78076f8aeb178f94becb5b72904f929807702529c7ba871ab56fa8"
 
 [metadata.files]
 astroid = [
