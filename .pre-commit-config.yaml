@@ -35,6 +35,4 @@ repos:
     rev: 5.10.1
     hooks:
       - id: isort
-        args: [ "--line-length", "88",
-                "--multi-line","VERTICAL_HANGING_INDENT",
-                "--trailing-comma", "true"]
+        args: [ "--profile", "black" ]
