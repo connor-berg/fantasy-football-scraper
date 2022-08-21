@@ -7,9 +7,9 @@ aws-cdk-lib==2.38.1 ; python_version >= "3.9" and python_version < "4.0" \
 cattrs==22.1.0 ; python_version >= "3.9" and python_version < "4.0" \
     --hash=sha256:94b67b64cf92c994f8784c40c082177dc916e0489a73a9a36b24eb18a9db40c6 \
     --hash=sha256:d55c477b4672f93606e992049f15d526dc7867e6c756cd6256d4af92e2b1e364
-constructs==10.1.81 ; python_version >= "3.9" and python_version < "4.0" \
-    --hash=sha256:a1e3ebae73d6ad0add82c4acd7ddc3d71b03ac1cf7d38de4f32b7760c1102c6c \
-    --hash=sha256:f9e20caf19271004aff457aa2069240dbee5701c1d6721fe7ef232b9be2bdb10
+constructs==10.1.82 ; python_version >= "3.9" and python_version < "4.0" \
+    --hash=sha256:b2cdf34a3f5e23d62e52dfe3b167e36c42c15232faa77053b2f9f61575c6ca6f \
+    --hash=sha256:e0074746cd947539e6254362128a12b0f3de1fda8134cc28a8989170b41ff48e
 exceptiongroup==1.0.0rc8 ; python_version >= "3.9" and python_version <= "3.10" \
     --hash=sha256:6990c24f06b8d33c8065cfe43e5e8a4bfa384e0358be036af9cc60b6321bd11a \
     --hash=sha256:ab0a968e1ef769e55d9a596f4a89f7be9ffedbc9fdefdb77cc68cf5c33ce1035
