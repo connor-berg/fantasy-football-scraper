@@ -38,7 +38,7 @@ class Pipeline(cdk.Stack):
             input=pipeline_source,
             partial_build_spec=codebuild.BuildSpec.from_object(build_spec),
             install_commands=["./scripts/install-deps.sh"],
-            commands=["pytest", "npx aws-cdk@2.x synth"],
+            commands=["./scripts/run-tests.sh", "npx aws-cdk@2.x synth"],
             primary_output_directory="cdk.out",
         )
         pipeline = pipelines.CodePipeline(
