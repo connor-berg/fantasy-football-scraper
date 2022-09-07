@@ -7,4 +7,4 @@ set -o verbose
 npm install
 
 # Install project dependencies
-pip install -r requirements.txt -r requirements-dev.txt
+pip install -r requirements.txt -r collect_statistics/src/requirements.txt -r requirements-dev.txt

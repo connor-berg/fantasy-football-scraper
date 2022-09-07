@@ -55,7 +55,7 @@ def test_infrastructure() -> None:
     setup_statistics_fn = lambda_.Function(
         test_stack,
         "SetupStatistics",
-        code=lambda_.Code.from_asset(os.path.join("setup_statistics", "runtime")),
+        code=lambda_.Code.from_asset(os.path.join("setup_statistics", "src")),
         handler="app.lambda_handler",
         environment={
             "SEASON_TABLE_NAME": database.season_table.table_name,
