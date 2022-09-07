@@ -13,7 +13,7 @@ def _get_season(season_table) -> dict:
     return response["Item"]
 
 
-def lambda_handler(event, context):
+def handler(event, context):
     """Handle lambda"""
     dynamodb = boto3.resource("dynamodb")
     team_table = dynamodb.Table(os.environ.get("TEAM_TABLE_NAME"))
