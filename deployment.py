@@ -47,9 +47,9 @@ class FantasyFootballScraper(cdk.Stage):
 
         setup_statistics_fn = lambda_.Function(
             serverless,
-            "SetupStatistics",
-            code=lambda_.Code.from_asset(path.join("setup_statistics", "runtime")),
-            handler="app.lambda_handler",
+            "SetupStatisticsFunction",
+            code=lambda_.Code.from_asset(path.join("setup_statistics", "src")),
+            handler="app.handler",
             environment={
                 "SEASON_TABLE_NAME": database.season_table.table_name,
                 "STATISTIC_TABLE_NAME": database.statistic_table.table_name,
@@ -60,3 +60,22 @@ class FantasyFootballScraper(cdk.Stage):
         database.season_table.grant_read_data(setup_statistics_fn)
         database.statistic_table.grant_read_data(setup_statistics_fn)
         database.team_table.grant_read_data(setup_statistics_fn)
+
+        lambda_.Function(
+            serverless,
+            "CollectStatisticsFunction",
+            code=lambda_.Code.from_asset(
+                path.join("collect_statistics", "src"),
+                bundling=cdk.BundlingOptions(
+                    image=lambda_.Runtime.PYTHON_3_9.bundling_image,
+                    command=[
+                        "bash",
+                        "-c",
+                        "pip install -r requirements.txt -t /asset-output && \
+                            cp -au . /asset-output",
+                    ],
+                ),
+            ),
+            runtime=lambda_.Runtime.PYTHON_3_9,
+            handler="app.handler",
+        )

@@ -11,9 +11,19 @@ repos:
       - id: poetry-check
       - id: poetry-lock
       - id: poetry-export
-        args: [ "-f", "requirements.txt", "-o", "requirements.txt" ]
+        args: [ "-f", "requirements.txt",
+                "-o", "requirements.txt"
+        ]
       - id: poetry-export
-        args: [ "--dev", "-f", "requirements.txt", "-o", "requirements-dev.txt" ]
+        args: [ "-f", "requirements.txt",
+                "-o", "collect_statistics/src/requirements.txt",
+                "--only", "collect-statistics"
+        ]
+      - id: poetry-export
+        args: [ "--dev", "-f",
+                "requirements.txt",
+                "-o", "requirements-dev.txt"
+        ]
   - repo: https://github.com/floatingpurr/sync_with_poetry
     rev: 0.2.1
     hooks:
@@ -23,7 +33,7 @@ repos:
     hooks:
       - id: bandit
   - repo: https://github.com/psf/black
-    rev: 22.6.0
+    rev: 22.8.0
     hooks:
       - id: black
   - repo: https://github.com/pycqa/flake8
