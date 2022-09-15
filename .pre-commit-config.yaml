@@ -20,9 +20,9 @@ repos:
                 "--only", "collect-statistics"
         ]
       - id: poetry-export
-        args: [ "--dev", "-f",
-                "requirements.txt",
-                "-o", "requirements-dev.txt"
+        args: [ "-f", "requirements.txt",
+                "-o", "requirements-dev.txt",
+                "--with", "dev"
         ]
   - repo: https://github.com/floatingpurr/sync_with_poetry
     rev: 0.2.1
