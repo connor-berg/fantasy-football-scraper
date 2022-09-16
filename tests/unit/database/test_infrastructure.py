@@ -68,6 +68,25 @@ def test_infrastructure() -> None:
     database.statistic_table.grant_read_data(setup_statistics_fn)
     database.team_table.grant_read_data(setup_statistics_fn)
 
+    lambda_.Function(
+        test_stack,
+        "CollectStatisticsFunction",
+        code=lambda_.Code.from_asset(
+            os.path.join("collect_statistics", "src"),
+            bundling=cdk.BundlingOptions(
+                image=lambda_.Runtime.PYTHON_3_9.bundling_image,
+                command=[
+                    "bash",
+                    "-c",
+                    "pip install -r requirements.txt -t /asset-output && \
+                        cp -au . /asset-output",
+                ],
+            ),
+        ),
+        runtime=lambda_.Runtime.PYTHON_3_9,
+        handler="app.handler",
+    )
+
     template = assertions.Template.from_stack(test_stack)
 
     template.resource_count_is("AWS::DynamoDB::Table", 3)
