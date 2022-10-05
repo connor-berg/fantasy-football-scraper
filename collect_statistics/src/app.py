@@ -1,3 +1,4 @@
+import json
 from datetime import date
 
 from lib.model import nfl
@@ -22,4 +23,5 @@ def handler(event, context):
         raise ValueError(f"Invalid week for the {season.year} season")
 
     statistics = tr.collect_statistics(teams, season, week, statistic)
-    return statistics.to_json(orient="table")
+    data = json.loads(statistics.to_json(orient="records"))
+    return {statistic["Id"]: data}

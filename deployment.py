@@ -3,7 +3,11 @@ from typing import Any
 
 import aws_cdk as cdk
 from aws_cdk import aws_dynamodb as dynamodb
+from aws_cdk import aws_events as events
+from aws_cdk import aws_events_targets as targets
 from aws_cdk import aws_lambda as lambda_
+from aws_cdk import aws_stepfunctions as sfn
+from aws_cdk import aws_stepfunctions_tasks as tasks
 from constructs import Construct
 
 import constants
@@ -61,7 +65,14 @@ class FantasyFootballScraper(cdk.Stage):
         database.statistic_table.grant_read_data(setup_statistics_fn)
         database.team_table.grant_read_data(setup_statistics_fn)
 
-        lambda_.Function(
+        setup_statistics = tasks.LambdaInvoke(
+            serverless,
+            "Setup Statistics",
+            lambda_function=setup_statistics_fn,
+            invocation_type=tasks.LambdaInvocationType.REQUEST_RESPONSE,
+        )
+
+        collect_statistics_fn = lambda_.Function(
             serverless,
             "CollectStatisticsFunction",
             code=lambda_.Code.from_asset(
@@ -76,6 +87,47 @@ class FantasyFootballScraper(cdk.Stage):
                     ],
                 ),
             ),
+            timeout=cdk.Duration.seconds(5),
             runtime=lambda_.Runtime.PYTHON_3_9,
             handler="app.handler",
         )
+
+        collect_statistics_map = sfn.Map(
+            serverless,
+            "Map State",
+            input_path="$.Payload",
+            items_path="$.statistics",
+            parameters={
+                "teams.$": "$.teams",
+                "season.$": "$.season",
+                "week.$": "$.week",
+                "statistic.$": "$$.Map.Item.Value",
+            },
+        )
+        collect_statistics_map.iterator(
+            tasks.LambdaInvoke(
+                serverless,
+                "Collect Statistics",
+                lambda_function=collect_statistics_fn,
+                invocation_type=tasks.LambdaInvocationType.REQUEST_RESPONSE,
+            )
+        )
+
+        definition = setup_statistics.next(collect_statistics_map)
+        state_machine = sfn.StateMachine(
+            serverless,
+            "FantasyFootballScraperStateMachine",
+            definition=definition,
+            timeout=cdk.Duration.minutes(5),
+        )
+
+        rule = events.Rule(
+            serverless,
+            "Run Weekly at 11:00 hrs UTC SEP-JAN",
+            # UTC - 6 time. ~6 AM CST
+            # UTC - 5 time. ~5 AM CDT
+            schedule=events.Schedule.cron(
+                minute="0", hour="11", week_day="MON", month="SEP-JAN", year="*"
+            ),
+        )
+        rule.add_target(targets.SfnStateMachine(state_machine))

@@ -543,7 +543,7 @@ STATISTIC_PUT_REQUESTS = [
     {
         "PutRequest": {
             "Item": {
-                "Id": {"S": "red-zone-scoring-percentage"},
+                "Id": {"S": "red-zone-scoring-pct"},
                 "Name": {"S": "Red Zone Scoring Percentage"},
                 "Abbreviation": {"S": "RZ%"},
             }
