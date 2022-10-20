@@ -6,7 +6,7 @@ import boto3
 
 def _get_season(season_table) -> dict:
     """Retrieves the current season from the provided DynamoDB table"""
-    year = str(date.today().year - 1)  # TODO just for testing
+    year = str(date.today().year)
     response = season_table.get_item(Key={"Id": year})
     # TODO: handle scenario where we're in the next year,
     #  but it's still the previous year's season

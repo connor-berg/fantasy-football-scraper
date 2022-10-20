@@ -113,7 +113,40 @@ class FantasyFootballScraper(cdk.Stage):
             )
         )
 
-        definition = setup_statistics.next(collect_statistics_map)
+        format_statistics_fn = lambda_.Function(
+            serverless,
+            "FormatStatisticsFunction",
+            code=lambda_.Code.from_asset(
+                path.join("format_statistics", "src"),
+                bundling=cdk.BundlingOptions(
+                    image=lambda_.Runtime.PYTHON_3_9.bundling_image,
+                    command=[
+                        "bash",
+                        "-c",
+                        "pip install -r requirements.txt -t /asset-output && \
+                            cp -au . /asset-output",
+                    ],
+                ),
+            ),
+            timeout=cdk.Duration.seconds(5),
+            runtime=lambda_.Runtime.PYTHON_3_9,
+            handler="app.handler",
+            environment={
+                "STATISTIC_TABLE_NAME": database.statistic_table.table_name,
+            },
+        )
+        database.statistic_table.grant_read_data(format_statistics_fn)
+
+        format_statistics = tasks.LambdaInvoke(
+            serverless,
+            "Format Statistics",
+            lambda_function=format_statistics_fn,
+            invocation_type=tasks.LambdaInvocationType.REQUEST_RESPONSE,
+        )
+
+        definition = setup_statistics.next(collect_statistics_map).next(
+            format_statistics
+        )
         state_machine = sfn.StateMachine(
             serverless,
             "FantasyFootballScraperStateMachine",

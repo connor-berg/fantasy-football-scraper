@@ -23,5 +23,6 @@ def handler(event, context):
         raise ValueError(f"Invalid week for the {season.year} season")
 
     statistics = tr.collect_statistics(teams, season, week, statistic)
-    data = json.loads(statistics.to_json(orient="records"))
+
+    data = json.loads(statistics.to_json(orient="split"))
     return {statistic["Id"]: data}
